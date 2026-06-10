@@ -1,4 +1,14 @@
+import { useNavigate } from "react-router-dom";
+
 export default function Settings() {
+
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        navigate("/login");
+    };
+
     return (
         <main className="flex-1 bg-black text-white my-12">
             <div className="max-w-3xl mx-auto py-12">
@@ -46,7 +56,7 @@ export default function Settings() {
                                 Change Password
                             </button>
 
-                            <button className="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 cursor-pointer">
+                            <button className="px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 cursor-pointer" onClick={handleLogout}>
                                 Logout
                             </button>
                         </div>

@@ -1,6 +1,29 @@
 import { ArrowLeftRight } from "lucide-react"
+import { useState } from "react";
+import { register } from "../api/authAPI.js";
+import { useNavigate, Navigate, Link } from "react-router-dom";
+
 
 const Register = () => {
+    const [form, setForm] = useState({ username: '', password: '' })
+    const navigate = useNavigate()
+
+    const token = localStorage.getItem("token")
+
+    if (token) {
+        return <Navigate to="/overview" />;
+    }
+
+    const handleSubmit = async () => {
+        const data = await register(form);
+
+        if (!data.message.includes("exists")) {
+            navigate("/login");
+        } else {
+            alert(data.message);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-cover bg-center bg-no-repeat flex flex-col items-center" style={{ backgroundImage: "url('/bg.jpg')" }}>
             <div className="mt-36 flex flex-col items-center">
@@ -17,19 +40,34 @@ const Register = () => {
                         Enter Login
                     </label>
 
-                    <input type="text" placeholder="Enter login" className="w-full h-13 bg-neutral-700/80 border border-neutral-600 rounded-lg px-4 text-white outline-none mb-3"></input>
+                    <input
+                        type="text"
+                        placeholder="Enter login"
+                        className="w-full h-13 bg-neutral-700/80 border border-neutral-600 rounded-lg px-4 text-white outline-none mb-3"
+                        onChange={(e) => setForm({ ...form, username: e.target.value })}
+                    />
 
                     <label className="block text-gray-400 font-semibold mb-3">
                         Enter password
                     </label>
 
-                    <input type="password" placeholder="********************" className="w-full h-13 bg-neutral-700/80 border border-neutral-600 rounded-lg px-4 text-white outline-none" />
+                    <input
+                        type="password"
+                        placeholder="********************"
+                        className="w-full h-13 bg-neutral-700/80 border border-neutral-600 rounded-lg px-4 text-white outline-none"
+                        onChange={(e) => setForm({ ...form, password: e.target.value })}
+                    />
 
                     <p className="block text-gray-400 font-semibold mt-3">
-                        If u already have account sing in
+                        <Link to="/login">
+                            If u already have account sign in
+                        </Link>
                     </p>
 
-                    <button className="mt-12 w-full h-16 bg-cyan-400 hover:bg-cyan-300 rounded-lg text-black text-xl cursor-pointer">
+                    <button 
+                        className="mt-12 w-full h-16 bg-cyan-400 hover:bg-cyan-300 rounded-lg text-black text-xl cursor-pointer"
+                        onClick={handleSubmit}
+                    >
                         Start
                     </button>
                 </div>
