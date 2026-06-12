@@ -9,15 +9,15 @@ export const db = await open({
 await db.exec("PRAGMA foreign_keys = ON")
 
 await db.exec(`
-    CREATE TABLE IF NOT EXISTS expences (
+    CREATE TABLE IF NOT EXISTS expenses (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         userId INTEGER,
         date TEXT,
         title TEXT,
         merchant TEXT,
         amount INTEGER,
-        report TEXT,
-        icon TEXT,
+        category TEXT,
+        type TEXT NOT NULL CHECK(type IN ('income', 'expense')),
         FOREIGN KEY (userId) REFERENCES users(id)
     )
 `);
@@ -27,6 +27,7 @@ await db.exec(`
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE,
         password TEXT,
-        name TEXT
+        name TEXTб
+        currency TEXT
     )
 `);
