@@ -15,6 +15,7 @@ import {
 } from "lucide-react"
 import BarChartCard from "../components/BarChartCard"
 import { incomeChart, outcomeChart } from "../data/chartData"
+import { NavLink } from "react-router-dom"
 
 const Overview = () => {
     return (
@@ -22,7 +23,7 @@ const Overview = () => {
             <div className="max-w-[1400px] mx-auto flex flex-col gap-5 bg-black text-white">
                 <div className="grid grid-cols-2">
                     <div className="border border-white/10 rounded-2xl bg-[#1b1b1b] mt-4 mx-10">
-                        <h2 className=" text-xl font-bold text-white p-2 border-b border-white/10">Pending Tasks</h2>
+                        <h2 className=" text-xl font-bold text-white p-2 border-b border-white/10">Quick Stasts</h2>
                         <div className="flex flex-col gap-3 px-3 py-6">
                             <div className="flex items-center justify-between">
 
@@ -33,7 +34,7 @@ const Overview = () => {
                                     />
 
                                     <p className="text-lg text-gray-400">
-                                        Pending Approvals
+                                        Total Income
                                     </p>
                                 </div>
 
@@ -51,7 +52,7 @@ const Overview = () => {
                                     />
 
                                     <p className="text-lg text-gray-400">
-                                        New Trips Registered
+                                        Total Expenses
                                     </p>
                                 </div>
 
@@ -69,7 +70,7 @@ const Overview = () => {
                                     />
 
                                     <p className="text-lg text-gray-400">
-                                        Unreported Expenses
+                                        Balance
                                     </p>
                                 </div>
 
@@ -87,7 +88,7 @@ const Overview = () => {
                                     />
 
                                     <p className="text-lg text-gray-400">
-                                        Upcoming Expenses
+                                        Transactions
                                     </p>
                                 </div>
 
@@ -105,7 +106,7 @@ const Overview = () => {
                                     />
 
                                     <p className="text-lg text-gray-400">
-                                        Unreported Advances
+                                        Top Categories
                                     </p>
                                 </div>
 
@@ -200,30 +201,30 @@ const Overview = () => {
                         Quick Access
                     </h1>
                     <div className="flex justify-around border-white/10 bg-[#1b1b1b] py-2">
-                        <button className="flex px-2 py-4 bg-[#28282a] rounded-xl items-center cursor-pointer">
+                        <NavLink to={"/transaction"} className="flex px-2 py-4 bg-[#28282a] rounded-xl items-center cursor-pointer">
                             <div className="p-2 rounded-full bg-fuchsia-500">
                                 <CreditCard size={16} />
                             </div>
                             <span className="p-2 text-xs">
                                 Add expences
                             </span>
-                        </button>
-                        <button className="flex px-2 py-4 bg-[#28282a] rounded-xl items-center cursor-pointer">
+                        </NavLink>
+                        <NavLink to={"/transaction"} className="flex px-2 py-4 bg-[#28282a] rounded-xl items-center cursor-pointer">
                             <div className="p-2 rounded-full bg-emerald-500">
                                 <BadgeDollarSignIcon size={16} />
                             </div>
-                            <span className="p-2 text-xs">
+                            <span  className="p-2 text-xs">
                                 Add Income
                             </span>
-                        </button>
-                        <button className="flex px-2 py-4 bg-[#28282a] rounded-xl items-center cursor-pointer">
+                        </NavLink>
+                        <NavLink to={"/category"} className="flex px-2 py-4 bg-[#28282a] rounded-xl items-center cursor-pointer">
                             <div className="p-2 rounded-full bg-indigo-500">
                                 <LayoutGrid size={16} />
                             </div>
-                            <span className="p-2 text-xs">
+                            <span  className="p-2 text-xs">
                                 Create Categories
                             </span>
-                        </button>
+                        </NavLink>
                         <button className="flex px-2 py-4 bg-[#28282a] rounded-xl items-center cursor-pointer">
                             <div className="p-2 rounded-full bg-sky-500">
                                 <FileSpreadsheet size={16} />

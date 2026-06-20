@@ -1,23 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Save, X, ArrowLeftRight } from "lucide-react"
 import { NavLink } from "react-router-dom"
 import { createExpenses } from "../api/expensesAPI";
+import { getCategory } from "../api/categoryAPI";
 
 export default function AddTransaction() {
     const [type, setType] = useState("expense")
+    const [category, setCategory] = useState([])
+    const [loading, setLoading] = useState(true)
     const [form, setForm] = useState({
         date: "",
         title: "",
         merchant: "",
         amount: 0,
-        category: "",
+        categoryId: 1,
         type: ""
     });
+
+    useEffect(() => {
+        getCategory()
+            .then((data) => {
+                setCategory(data)
+            })
+            .catch((err) => {
+                console.error(err)
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+    })
+
+    if (loading) {
+        return (
+            <main className="flex-1 bg-black text-white flex items-center justify-center">
+                <h1 className="text-3xl font-bold">Loading...</h1>
+            </main>
+        )
+    }
 
     const handleChange = (e) => {
         setForm({
             ...form,
-            [e.target.name]: e.target.value,
+            [e.target.name]: e.target.name === "categoryId" ? Number(e.target.value) : e.target.value,
         });
     };
 
@@ -28,7 +52,7 @@ export default function AddTransaction() {
                 !form.title.trim() ||
                 !form.merchant.trim() ||
                 form.amount === "" ||
-                !form.category.trim()
+                !form.categoryId === ""
             ) {
                 alert("Please fill in all fields")
             }
@@ -37,6 +61,7 @@ export default function AddTransaction() {
                 ...form,
                 type,
                 amount: Number(form.amount),
+                categoryId: Number(form.categoryId),
             })
 
             if (newTransaction.message) {
@@ -48,7 +73,7 @@ export default function AddTransaction() {
                 title: "",
                 merchant: "",
                 amount: 0,
-                category: "",
+                categoryId: 0,
             });
         } catch (err) {
             console.error(err)
@@ -124,17 +149,19 @@ export default function AddTransaction() {
                             />
 
                             <select
-                                name="category"
-                                value={form.category}
+                                name="categoryId"
+                                value={form.categoryId}
                                 className="bg-[#333] rounded-xl px-4 py-3 outline-none"
                                 onChange={handleChange}
                             >
-                                <option>Food</option>
-                                <option>Shopping</option>
-                                <option>Health</option>
-                                <option>Salary</option>
-                                <option>Transport</option>
-                                <option>Other</option>
+
+                                {
+                                    category.map((category) => {
+                                        return (
+                                            <option value={category.id}>{category.name}</option>
+                                        )
+                                    })
+                                }
                             </select>
 
                             <div className="flex justify-end gap-4 pt-4">
@@ -191,7 +218,7 @@ export default function AddTransaction() {
                             <div>
                                 <p className="text-gray-500 text-sm">Category</p>
                                 <p className="text-lg text-gray-300">
-                                    {form.category}
+                                    {form.categoryId}
                                 </p>
                             </div>
 

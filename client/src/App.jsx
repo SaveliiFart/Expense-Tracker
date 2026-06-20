@@ -6,8 +6,10 @@ import Overview from "./pages/Overview.jsx"
 import Layout from "./components/Layout.jsx"
 import ProtectedRoute from "./components/ProtectedRoute.jsx"
 import Settings from "./pages/Settings.jsx"
-import "./global.css"
 import AddTransaction from "./pages/AddTransaction.jsx"
+import CreateCategory from "./pages/createCategory.jsx"
+import "./global.css"
+
 
 const App = () => {
   return (
@@ -28,6 +30,7 @@ const App = () => {
           <Route path="/overview" element={<Overview />} />
           <Route path="/expenses" element={<Expenses />} />
           <Route path="/transaction" element={<AddTransaction/>} />
+          <Route path="/category" element={<CreateCategory/>} />
           <Route path="/settings" element={<Settings/>} />
         </Route>
       </Routes>

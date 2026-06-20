@@ -5,24 +5,10 @@ import {
     ListFilter,
     Ellipsis,
     Check,
-    Hamburger,
-    ShoppingBasket,
-    Hospital,
-    Car,
-    BadgeDollarSign,
-    CircleDollarSign
+    EllipsisVertical,
 } from "lucide-react"
-
+import { iconMap } from "../data/categoriesIcon.js"
 import { getExpenses } from "../api/expensesAPI.js"
-
-const iconMap = {
-    Food: Hamburger,
-    Shopping: ShoppingBasket,
-    Health: Hospital,
-    Transport: Car,
-    Salary: BadgeDollarSign,
-    Other: CircleDollarSign,
-}
 
 const Expenses = () => {
     const [expenses, setExpenses] = useState([])
@@ -105,8 +91,7 @@ const Expenses = () => {
                         <tbody>
                             {expenses.map((expense) => {
 
-                                const Icon =
-                                    iconMap[expense.category] || CircleDollarSign
+                                const Icon = iconMap[expense.icon] || EllipsisVertical
 
                                 return (
                                     <tr

@@ -3,13 +3,13 @@ import { db } from "../config/db.js"
 export const createExpense = async (req, res) => {
     try {
         const userId = req.user.id
-        const { date, title, merchant, amount, category, type } = req.body
+        const { date, title, merchant, amount, categoryId, type } = req.body
 
         const result = await db.run(
             `INSERT INTO expenses 
-                    (userId, date, title, merchant, amount, category, type) 
+                    (userId, date, title, merchant, amount, categoryId, type) 
                     VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [userId, date, title, merchant, amount, category, type]
+            [userId, date, title, merchant, amount, categoryId, type]
         )
 
         res.status(201).json({
@@ -18,7 +18,7 @@ export const createExpense = async (req, res) => {
             title,
             merchant,
             amount,
-            category,
+            categoryId,
             type,
         })
     } catch (err) {
@@ -30,10 +30,20 @@ export const getExpenses = async (req, res) => {
     try {
         const userId = req.user.id
 
-        const expenses = await db.all(
-            `SELECT * FROM expenses WHERE userId = ?`,
-            [userId]
-        )
+        const expenses = await db.all(`
+            SELECT
+                expenses.id,
+                expenses.date,
+                expenses.title,
+                expenses.merchant,
+                expenses.amount,
+                expenses.type,
+                categories.icon
+            FROM expenses
+            JOIN categories
+                ON expenses.categoryId = categories.id
+            WHERE expenses.userId = ?
+        `, [userId]);
 
         res.json(expenses)
     } catch (err) {
