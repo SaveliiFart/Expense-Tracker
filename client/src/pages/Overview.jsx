@@ -1,9 +1,4 @@
 import {
-    Clock3,
-    Plane,
-    Wallet,
-    ShoppingCart,
-    BadgeDollarSign,
     Hamburger,
     ShoppingBasket,
     BadgeDollarSignIcon,
@@ -15,6 +10,7 @@ import {
 } from "lucide-react"
 import BarChartCard from "../components/BarChartCard"
 import { incomeChart, outcomeChart } from "../data/chartData"
+import QuickStats from "../components/quickStats"
 import { NavLink } from "react-router-dom"
 
 const Overview = () => {
@@ -22,100 +18,8 @@ const Overview = () => {
         <main className="flex-1 py-4 px-2">
             <div className="max-w-[1400px] mx-auto flex flex-col gap-5 bg-black text-white">
                 <div className="grid grid-cols-2">
-                    <div className="border border-white/10 rounded-2xl bg-[#1b1b1b] mt-4 mx-10">
-                        <h2 className=" text-xl font-bold text-white p-2 border-b border-white/10">Quick Stasts</h2>
-                        <div className="flex flex-col gap-3 px-3 py-6">
-                            <div className="flex items-center justify-between">
 
-                                <div className="flex items-center gap-4">
-                                    <Clock3
-                                        size={32}
-                                        className="text-purple-500"
-                                    />
-
-                                    <p className="text-lg text-gray-400">
-                                        Total Income
-                                    </p>
-                                </div>
-
-                                <span className="text-lg font-bold text-white">
-                                    5
-                                </span>
-                            </div>
-
-                            <div className="flex items-center justify-between">
-
-                                <div className="flex items-center gap-4">
-                                    <Plane
-                                        size={32}
-                                        className="text-purple-500"
-                                    />
-
-                                    <p className="text-lg text-gray-400">
-                                        Total Expenses
-                                    </p>
-                                </div>
-
-                                <span className="text-lg font-bold text-white">
-                                    1
-                                </span>
-                            </div>
-
-                            <div className="flex items-center justify-between">
-
-                                <div className="flex items-center gap-4">
-                                    <Wallet
-                                        size={32}
-                                        className="text-purple-500"
-                                    />
-
-                                    <p className="text-lg text-gray-400">
-                                        Balance
-                                    </p>
-                                </div>
-
-                                <span className="text-lg font-bold text-white">
-                                    4
-                                </span>
-                            </div>
-
-                            <div className="flex items-center justify-between">
-
-                                <div className="flex items-center gap-4">
-                                    <ShoppingCart
-                                        size={32}
-                                        className="text-purple-500"
-                                    />
-
-                                    <p className="text-lg text-gray-400">
-                                        Transactions
-                                    </p>
-                                </div>
-
-                                <span className="text-lg font-bold text-white">
-                                    0
-                                </span>
-                            </div>
-
-                            <div className="flex items-center justify-between">
-
-                                <div className="flex items-center gap-4">
-                                    <BadgeDollarSign
-                                        size={32}
-                                        className="text-purple-500"
-                                    />
-
-                                    <p className="text-lg text-gray-400">
-                                        Top Categories
-                                    </p>
-                                </div>
-
-                                <span className="text-lg font-bold text-white">
-                                    €0.00
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+                    <QuickStats />
 
                     <div className="border border-white/10 rounded-2xl bg-[#1b1b1b] overflow-hidden my-2 mx-10">
                         <h2 className=" text-xl font-bold text-white p-2 border-b border-white/10">Recent Expenses</h2>

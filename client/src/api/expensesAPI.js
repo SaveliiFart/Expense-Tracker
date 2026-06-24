@@ -22,3 +22,12 @@ export const createExpenses = async (expenses) => {
     })
     return res.json()
 }
+
+export const getFilteredExpenses = async () => {
+    const token = localStorage.getItem("token")
+    const res = await fetch(`${BASE_URL}filtered`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` }
+    })
+    return res.json()
+}

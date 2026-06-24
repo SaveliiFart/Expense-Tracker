@@ -50,3 +50,49 @@ export const getExpenses = async (req, res) => {
         res.status(500).json({ message: err.message })
     }
 }
+
+export const getFilteredExpenses = async (req, res) => {
+    try {
+    const userId = req.user.id
+
+    const totalIncome = await db.get(`
+        SELECT COUNT(*) as totalIncome FROM expenses WHERE userId = ? AND type = "income"
+    `, [userId])
+
+    const totalExpenses = await db.get(`
+        SELECT SUM(amount) as totalExpenses FROM expenses WHERE userId = ? AND type = "expense"
+    `, [userId])
+
+    const balance = await db.get(`
+        SELECT SUM(CASE WHEN type='income' THEN amount ELSE 0 END) - SUM(CASE WHEN type='expense' THEN amount ELSE 0 END) AS balance FROM expenses WHERE userId = ?
+    `, [userId])
+
+    const transaction = await db.get(`
+        SELECT COUNT(*) as totalTransactions FROM expenses WHERE userId = ?
+    `, [userId])
+
+    const topCategory = await db.get(`
+        SELECT 
+            c.name, 
+            c.icon, 
+            SUM(e.amount) as total 
+        FROM expenses e 
+        JOIN categories c ON e.categoryId = c.id 
+        WHERE e.userId = ? AND e.type = 'expense' 
+        GROUP BY e.categoryId ORDER BY total DESC 
+        LIMIT 1
+    `, [userId])
+
+        console.log({totalIncome, totalExpenses,balance,transaction,topCategory})
+
+        res.json({
+            totalIncome: totalIncome?.totalIncome || 0,
+            totalExpenses: totalExpenses?.totalExpenses || 0,
+            balance: balance?.balance || 0,
+            transaction: transaction?.totalTransactions || 0,
+            topCategory: topCategory || null
+        })
+    } catch (err) {
+        res.status(500).json({ message: err.message })
+    }
+}
