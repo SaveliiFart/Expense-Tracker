@@ -1,6 +1,6 @@
 import { db } from "../config/db.js"
 
-export const createExpense = async (req, res) => {
+export const createTransactions = async (req, res) => {
     try {
         const userId = req.user.id
         const { date, title, merchant, amount, categoryId, type } = req.body
@@ -26,7 +26,7 @@ export const createExpense = async (req, res) => {
     }
 }
 
-export const getExpenses = async (req, res) => {
+export const getTransactions = async (req, res) => {
     try {
         const userId = req.user.id
 
@@ -51,7 +51,7 @@ export const getExpenses = async (req, res) => {
     }
 }
 
-export const getFilteredExpenses = async (req, res) => {
+export const getFilteredTransactions = async (req, res) => {
     try {
     const userId = req.user.id
 
@@ -83,8 +83,6 @@ export const getFilteredExpenses = async (req, res) => {
         LIMIT 1
     `, [userId])
 
-        console.log({totalIncome, totalExpenses,balance,transaction,topCategory})
-
         res.json({
             totalIncome: totalIncome?.totalIncome || 0,
             totalExpenses: totalExpenses?.totalExpenses || 0,
@@ -94,5 +92,26 @@ export const getFilteredExpenses = async (req, res) => {
         })
     } catch (err) {
         res.status(500).json({ message: err.message })
+    }
+}
+
+export const getChartData = async (req, res) => {
+    try {
+        const userId = req.user.id
+
+        const chartIncome = await db.all(`
+            SELECT strftime('%m', date) as month, SUM(amount) as total FROM expenses WHERE userId = ? AND type = 'income' GROUP BY month ORDER BY month DESC LIMIT 6
+        `, [userId])
+
+        const chartExpenses = await db.all(`
+            SELECT strftime('%m', date) as month, SUM(amount) as total FROM expenses WHERE userId = ? AND type = 'expense' GROUP BY month ORDER BY month DESC LIMIT 6
+        `, [userId])
+
+        res.json({
+            chartIncome: chartIncome || null,
+            chartExpenses: chartExpenses || null
+        })
+    } catch (err) {
+        res.status(500).json({message: err.message})
     }
 }

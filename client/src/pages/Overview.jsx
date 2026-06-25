@@ -1,103 +1,56 @@
 import {
-    Hamburger,
-    ShoppingBasket,
     BadgeDollarSignIcon,
-    Shirt,
-    Hospital,
     CreditCard,
     LayoutGrid,
     FileSpreadsheet
 } from "lucide-react"
 import BarChartCard from "../components/BarChartCard"
-import { incomeChart, outcomeChart } from "../data/chartData"
+import { builtChartData } from "../data/chartDataHelper"
 import QuickStats from "../components/quickStats"
+import RecentTransactions from "../components/recentTransactions"
 import { NavLink } from "react-router-dom"
+import { getChartData } from "../api/transactionsAPI"
+import { useState, useEffect } from "react"
 
 const Overview = () => {
+    const [incomeChart, setIncomeChart] = useState(null)
+    const [expenseChart, setExpenseChart] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        getChartData()
+            .then((data) => {
+                setIncomeChart(
+                    builtChartData(data.chartIncome, "Income", "#14d8c9")
+                )
+
+                setExpenseChart(
+                    builtChartData(data.chartExpenses, "Outcome", "#ef4444")
+                )
+            })
+            .catch((err) => {
+                console.error(err)
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+    }, [])
+
+    if (loading) {
+        return (
+            <main className="flex-1 bg-black text-white flex items-center justify-center">
+                <h1 className="text-3xl font-bold">Loading...</h1>
+            </main>
+        )
+    }
+
+
     return (
         <main className="flex-1 py-4 px-2">
             <div className="max-w-[1400px] mx-auto flex flex-col gap-5 bg-black text-white">
                 <div className="grid grid-cols-2">
-
                     <QuickStats />
-
-                    <div className="border border-white/10 rounded-2xl bg-[#1b1b1b] overflow-hidden my-2 mx-10">
-                        <h2 className=" text-xl font-bold text-white p-2 border-b border-white/10">Recent Expenses</h2>
-
-                        <div className="p-3">
-                            <table className="w-full border-separate border-spacing-y-3">
-                                <thead>
-                                    <tr className="text-gray-400 text-left">
-                                        <th className="w-14"></th>
-                                        <th>
-                                            Subject
-                                        </th>
-                                        <th className="text-right">
-                                            Amount
-                                        </th>
-                                    </tr>
-                                </thead>
-
-                                <tbody className="text-white">
-                                    <tr>
-                                        <td className=" text-cyan-400">
-                                            <Hamburger size={24} />
-                                        </td>
-                                        <td>
-                                            Mcdonald's
-                                        </td>
-                                        <td className="text-right font-semibold">
-                                            100$
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className=" text-cyan-400">
-                                            <ShoppingBasket size={24} />
-                                        </td>
-                                        <td>
-                                            Products
-                                        </td>
-                                        <td className="text-right font-semibold">
-                                            200$
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className=" text-cyan-400">
-                                            <BadgeDollarSignIcon size={24} />
-                                        </td>
-                                        <td>
-                                            Salary
-                                        </td>
-                                        <td className="text-right font-semibold">
-                                            10000$
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className=" text-cyan-400">
-                                            <Shirt size={24} />
-                                        </td>
-                                        <td>
-                                            Clothes
-                                        </td>
-                                        <td className="text-right font-semibold">
-                                            500$
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className=" text-cyan-400">
-                                            <Hospital size={24} />
-                                        </td>
-                                        <td>
-                                            Buy medicine
-                                        </td>
-                                        <td className="text-right font-semibold">
-                                            600$
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <RecentTransactions/>
                 </div>
 
                 <div className="border-white/10 bg-[#1b1b1b] mx-10 rounded-2xl">
@@ -144,10 +97,10 @@ const Overview = () => {
                     <h2 className=" text-xl font-bold text-white p-2 border-b border-white/10">Mounthly report</h2>
                     <div className="grid grid-cols-2">
                         <div className="border-r border-white/10 ">
-                            <BarChartCard {...incomeChart} />
+                            <BarChartCard {...incomeChart}/>
                         </div>
                         <div>
-                            <BarChartCard {...outcomeChart} />
+                            <BarChartCard {...expenseChart}/>
                         </div>
                     </div>
                 </div>

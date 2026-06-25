@@ -1,6 +1,6 @@
-const BASE_URL = "http://localhost:5175/api/expenses/"
+const BASE_URL = "http://localhost:5175/api/transactions/"
 
-export const getExpenses = async () => {
+export const getTransactions = async () => {
     const token = localStorage.getItem("token")
     const res = await fetch(BASE_URL, {
         method: "GET",
@@ -9,7 +9,7 @@ export const getExpenses = async () => {
     return res.json()
 }
 
-export const createExpenses = async (expenses) => {
+export const createTransactions = async (expenses) => {
     const token = localStorage.getItem("token")
     console.log(expenses)
     const res = await fetch(BASE_URL, {
@@ -23,9 +23,18 @@ export const createExpenses = async (expenses) => {
     return res.json()
 }
 
-export const getFilteredExpenses = async () => {
+export const getFilteredTransactions = async () => {
     const token = localStorage.getItem("token")
     const res = await fetch(`${BASE_URL}filtered`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` }
+    })
+    return res.json()
+}
+
+export const getChartData= async () => {
+    const token = localStorage.getItem("token")
+    const res = await fetch(`${BASE_URL}chartData`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` }
     })

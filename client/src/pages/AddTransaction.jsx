@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Save, X, ArrowLeftRight } from "lucide-react"
 import { NavLink } from "react-router-dom"
-import { createExpenses } from "../api/expensesAPI";
+import { createTransactions } from "../api/transactionsAPI";
 import { getCategory } from "../api/categoryAPI";
 
 export default function AddTransaction() {
@@ -57,7 +57,7 @@ export default function AddTransaction() {
                 alert("Please fill in all fields")
             }
 
-            const newTransaction = await createExpenses({
+            const newTransaction = await createTransactions({
                 ...form,
                 type,
                 amount: Number(form.amount),

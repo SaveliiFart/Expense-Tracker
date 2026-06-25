@@ -8,16 +8,16 @@ import {
     EllipsisVertical,
 } from "lucide-react"
 import { iconMap } from "../data/categoriesIcon.js"
-import { getExpenses } from "../api/expensesAPI.js"
+import { getTransactions } from "../api/transactionsAPI.js"
 
 const Expenses = () => {
-    const [expenses, setExpenses] = useState([])
+    const [transaction, setTransactions] = useState([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        getExpenses()
+        getTransactions()
             .then((data) => {
-                setExpenses(data)
+                setTransactions(data)
             })
             .catch((err) => {
                 console.error(err)
@@ -89,7 +89,7 @@ const Expenses = () => {
                         </thead>
 
                         <tbody>
-                            {expenses.map((expense) => {
+                            {transaction.map((expense) => {
 
                                 const Icon = iconMap[expense.icon] || EllipsisVertical
 
@@ -148,7 +148,7 @@ const Expenses = () => {
                                             {expense.type === "income"
                                                 ? "+"
                                                 : "-"}
-                                            ${Number(expense.amount).toFixed(2)}
+                                            ${Number(expense.amount).toFixed(2)}$
                                         </td>
                                     </tr>
                                 )

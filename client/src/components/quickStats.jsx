@@ -6,11 +6,11 @@ import {
     ReceiptText,
     EllipsisVertical
 } from "lucide-react"
-import { getFilteredExpenses } from "../api/expensesAPI.js"
+import { getFilteredTransactions } from "../api/transactionsAPI.js"
 import { iconMap } from "../data/categoriesIcon"
 
 const QuickStats = () => {
-    const [filteredExpenses, setFilteredExpenses] = useState({
+    const [filteredTransactions, setFilteredTransactions] = useState({
         totalIncome: 0,
         totalExpenses: 0,
         balance: 0,
@@ -24,10 +24,9 @@ const QuickStats = () => {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        getFilteredExpenses()
+        getFilteredTransactions()
             .then((data) => {
-                setFilteredExpenses(data)
-                console.log(data)
+                setFilteredTransactions(data)
             })
             .catch((err) => {
                 console.error(err)
@@ -37,7 +36,7 @@ const QuickStats = () => {
             })
     }, [])
 
-    const Icon = iconMap[filteredExpenses?.topCategory?.icon] || EllipsisVertical
+    const Icon = iconMap[filteredTransactions?.topCategory?.icon] || EllipsisVertical
 
     if (loading) {
         return (
@@ -65,7 +64,7 @@ const QuickStats = () => {
                     </div>
 
                     <span className="text-lg font-bold text-white">
-                        {filteredExpenses.totalIncome}
+                        {filteredTransactions.totalIncome}
                     </span>
                 </div>
 
@@ -83,7 +82,7 @@ const QuickStats = () => {
                     </div>
 
                     <span className="text-lg font-bold text-white">
-                        {filteredExpenses.totalExpenses}
+                        {filteredTransactions.totalExpenses}$
                     </span>
                 </div>
 
@@ -101,7 +100,7 @@ const QuickStats = () => {
                     </div>
 
                     <span className="text-lg font-bold text-white">
-                        {filteredExpenses.balance}
+                        {filteredTransactions.balance}$
                     </span>
                 </div>
 
@@ -119,7 +118,7 @@ const QuickStats = () => {
                     </div>
 
                     <span className="text-lg font-bold text-white">
-                        {filteredExpenses.transaction}
+                        {filteredTransactions.transaction}
                     </span>
                 </div>
 
@@ -137,8 +136,8 @@ const QuickStats = () => {
                     </div>
 
                     <span className="text-lg font-bold text-white">
-                        {filteredExpenses.topCategory && (
-                            <span>{filteredExpenses.topCategory.total}</span>
+                        {filteredTransactions.topCategory && (
+                            <span>{filteredTransactions.topCategory.total}$</span>
                         )}
                     </span>
                 </div>
