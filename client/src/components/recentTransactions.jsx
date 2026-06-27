@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react"
 import { iconMap } from "../data/categoriesIcon"
-import { getTransactions } from "../api/transactionsAPI"
+import { getOverviewTransactions } from "../api/transactionsAPI"
 
 const RecentExpenses = () => {
     const [transaction, setTransactions] = useState([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        getTransactions()
+        getOverviewTransactions()
             .then((data) => {
                 setTransactions(data)
             })

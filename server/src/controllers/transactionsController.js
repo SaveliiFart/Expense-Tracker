@@ -26,18 +26,13 @@ export const createTransactions = async (req, res) => {
     }
 }
 
-export const getTransactions = async (req, res) => {
-    try {
+export const getOverviewTransactions = async (req, res) => {
+        try {
         const userId = req.user.id
 
         const expenses = await db.all(`
             SELECT
-                expenses.id,
-                expenses.date,
-                expenses.title,
-                expenses.merchant,
-                expenses.amount,
-                expenses.type,
+                expenses.*,
                 categories.icon
             FROM expenses
             JOIN categories
@@ -46,6 +41,45 @@ export const getTransactions = async (req, res) => {
         `, [userId]);
 
         res.json(expenses)
+    } catch (err) {
+        res.status(500).json({ message: err.message })
+    }
+}
+
+export const getTransactions = async (req, res) => {
+    try {
+        const userId = req.user.id
+
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 7;
+
+        const offset = (page - 1) * limit;
+
+        const expenses = await db.all(`
+            SELECT
+                expenses.*,
+                categories.icon
+            FROM expenses
+            JOIN categories
+                ON expenses.categoryId = categories.id
+            WHERE expenses.userId = ?
+            LIMIT ?
+            OFFSET ?
+        `, [userId, limit, offset]);
+
+        const total = await db.get(`
+            SELECT COUNT(*) as total FROM expenses WHERE userId = ?
+        `, [userId])
+
+        res.json({
+            data: expenses,
+            pagination: {
+                page,
+                limit,
+                total: total.total,
+                totalPages: Math.ceil(total.total / limit)
+            }
+        })
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
