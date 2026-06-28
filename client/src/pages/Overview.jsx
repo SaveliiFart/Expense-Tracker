@@ -5,36 +5,13 @@ import {
     FileSpreadsheet
 } from "lucide-react"
 import BarChartCard from "../components/BarChartCard"
-import { builtChartData } from "../data/chartDataHelper"
 import QuickStats from "../components/quickStats"
 import RecentTransactions from "../components/recentTransactions"
 import { NavLink } from "react-router-dom"
-import { getChartData } from "../api/transactionsAPI"
-import { useState, useEffect } from "react"
+import { useOverview } from "../hooks/useOverview"
 
 const Overview = () => {
-    const [incomeChart, setIncomeChart] = useState(null)
-    const [expenseChart, setExpenseChart] = useState(null)
-    const [loading, setLoading] = useState(true)
-
-    useEffect(() => {
-        getChartData()
-            .then((data) => {
-                setIncomeChart(
-                    builtChartData(data.chartIncome, "Income", "#14d8c9")
-                )
-
-                setExpenseChart(
-                    builtChartData(data.chartExpenses, "Outcome", "#ef4444")
-                )
-            })
-            .catch((err) => {
-                console.error(err)
-            })
-            .finally(() => {
-                setLoading(false)
-            })
-    }, [])
+    const {incomeChart, expenseChart, loading} = useOverview()
 
     if (loading) {
         return (
@@ -43,7 +20,6 @@ const Overview = () => {
             </main>
         )
     }
-
 
     return (
         <main className="flex-1 py-4 px-2">
@@ -58,7 +34,7 @@ const Overview = () => {
                         Quick Access
                     </h1>
                     <div className="flex justify-around border-white/10 bg-[#1b1b1b] py-2">
-                        <NavLink to={"/transaction"} className="flex px-2 py-4 bg-[#28282a] rounded-xl items-center cursor-pointer">
+                        <NavLink to={"/transaction"} state={{type:"expense"}} className="flex px-2 py-4 bg-[#28282a] rounded-xl items-center cursor-pointer">
                             <div className="p-2 rounded-full bg-fuchsia-500">
                                 <CreditCard size={16} />
                             </div>
@@ -66,7 +42,7 @@ const Overview = () => {
                                 Add expences
                             </span>
                         </NavLink>
-                        <NavLink to={"/transaction"} className="flex px-2 py-4 bg-[#28282a] rounded-xl items-center cursor-pointer">
+                        <NavLink to={"/transaction"} state={{type:"income"}} className="flex px-2 py-4 bg-[#28282a] rounded-xl items-center cursor-pointer">
                             <div className="p-2 rounded-full bg-emerald-500">
                                 <BadgeDollarSignIcon size={16} />
                             </div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { NavLink } from "react-router-dom"
 import {
     Funnel,
@@ -8,27 +8,20 @@ import {
     ChevronRight,
 } from "lucide-react"
 import { iconMap } from "../data/categoriesIcon.js"
-import { getTransactions } from "../api/transactionsAPI.js"
+import { useTransactions } from "../hooks/useTransactions.jsx"
+import DropAndDown from "../components/DropAndDownPannel.jsx"
 
 const Expenses = () => {
     const [page, setPage] = useState(1)
-    const [transaction, setTransactions] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [pagination, setPagination] = useState({
-        page: 1,
-        limit: 7,
-        total: 0,
-        totalPages: 1
+    const [selected, setSelected] = useState([])
+    const [filtersOpen, setFiltersOpen] = useState(false)
+    const [filters, setFilters] = useState({
+        type: "all",
+        category: "all",
+        sort: "newest",
     });
 
-    useEffect(() => {
-        getTransactions(page)
-            .then((data) => {
-                setTransactions(data.data)
-                setPagination(data.pagination)
-            })
-            .finally(() => setLoading(false))
-    }, [page])
+    const {transaction, pagination, loading} = useTransactions(page)
 
     if (loading) {
         return (
@@ -41,7 +34,19 @@ const Expenses = () => {
     const start = (pagination?.page - 1) * (pagination?.limit + 1)
     const end = Math.min((pagination?.page * pagination?.limit), pagination?.total)
 
-    console.log(pagination)
+    const handleSelected = (id) => {
+        setSelected(prev => prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id])
+    }
+
+    const handleSelectAll = () => {
+        if (selected.length === transaction.length) {
+            setSelected([]);
+            return;
+        }
+        setSelected(
+            transaction.map(item => item.id)
+        );
+    }
 
     return (
         <main className="flex-1 py-4 px-2">
@@ -50,16 +55,22 @@ const Expenses = () => {
                 <div className="flex justify-between p-4 mx-10">
                     <h2 className="text-4xl font-bold">Expenses</h2>
 
-                    <div className="flex flex-row text-center gap-2">
+                    <div className="relative flex flex-row text-center gap-2">
                         <NavLink to={"/transaction"}>
                             <button className="py-2 px-4 text-black bg-teal-500 rounded-sm text-sm font-bold cursor-pointer">
                                 New Expense
                             </button>
                         </NavLink>
 
-                        <button className="py-1 px-2 text-teal-500 border border-white/20 bg-[#1b1b1b] cursor-pointer">
+                        <button
+                            onClick={() => setFiltersOpen(!filtersOpen)}
+                            className="py-1 px-2 text-teal-500 border border-white/20 bg-[#1b1b1b] cursor-pointer"
+                        >
                             <Funnel size={20} />
                         </button>
+                        {
+                            filtersOpen && (<DropAndDown filters={filters} setFilters={setFilters} setFiltersOpen={setFiltersOpen}/>)
+                        }
                     </div>
                 </div>
 
@@ -69,7 +80,10 @@ const Expenses = () => {
                         <thead>
                             <tr className="border-t border-white/20 bg-black">
                                 <th className="py-4 px-4 text-left">
-                                    <button className="w-6 h-6 rounded-md bg-gray-500 flex items-center justify-center cursor-pointer">
+                                    <button
+                                        onClick={() => handleSelectAll()}
+                                        className="w-6 h-6 rounded-md bg-gray-500 flex items-center justify-center cursor-pointer"
+                                    >
                                         <Check size={18} className="text-cyan-400" />
                                     </button>
                                 </th>
@@ -103,11 +117,18 @@ const Expenses = () => {
                                         }
                                     >
                                         <td className="py-4 px-4">
-                                            <button className="w-6 h-6 rounded-md bg-gray-500 flex items-center justify-center cursor-pointer">
-                                                <Check
-                                                    size={18}
-                                                    className="text-cyan-400"
-                                                />
+                                            <button
+                                                onClick={() => {handleSelected(expense.id)}}
+                                                className="w-6 h-6 rounded-md bg-gray-500 flex items-center justify-center cursor-pointer"
+                                            >
+                                                {
+                                                    selected?.includes(expense.id) && (
+                                                        <Check
+                                                            size={18}
+                                                            className="text-cyan-400"
+                                                        />
+                                                    )
+                                                }
                                             </button>
                                         </td>
 

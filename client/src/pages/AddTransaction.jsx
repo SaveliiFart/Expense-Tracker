@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Save, X, ArrowLeftRight } from "lucide-react"
 import { NavLink } from "react-router-dom"
 import { createTransactions } from "../api/transactionsAPI";
-import { getCategory } from "../api/categoryAPI";
+import { useAddTransactions } from "../hooks/useAddTransactions";
 
 export default function AddTransaction() {
-    const [type, setType] = useState("expense")
-    const [category, setCategory] = useState([])
-    const [loading, setLoading] = useState(true)
+    const { state } = useLocation()
+    const [type, setType] = useState(state?.type || "expense")
     const [form, setForm] = useState({
         date: "",
         title: "",
@@ -16,19 +16,7 @@ export default function AddTransaction() {
         categoryId: 1,
         type: ""
     });
-
-    useEffect(() => {
-        getCategory()
-            .then((data) => {
-                setCategory(data)
-            })
-            .catch((err) => {
-                console.error(err)
-            })
-            .finally(() => {
-                setLoading(false)
-            })
-    })
+    const {category, loading} = useAddTransactions()
 
     if (loading) {
         return (
